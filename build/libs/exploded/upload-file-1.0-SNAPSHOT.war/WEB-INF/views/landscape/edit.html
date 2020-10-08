@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit</title>
+</head>
+<body>
+<span th:replace="layout:: header"></span>
+<h1>Edit</h1>
+<span th:text="${mess}"></span>
+<form th:object="${landscape}" method="post">
+    <table>
+        <tr hidden="hidden">
+            <td>name</td>
+            <td><input type="text"  th:field="*{id}"/></td>
+        </tr>
+        <tr>
+            <td>name</td>
+            <td><input type="text" name="name" th:field="*{name}"/></td>
+        </tr>
+        <tr>
+            <td>country</td>
+            <td><input type="text" name="address" th:field="*{country}"/></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="submit" value="edit"></td>
+        </tr>
+    </table>
+</form>
+<span th:replace="layout::footer"></span>
+</body>
+</html>

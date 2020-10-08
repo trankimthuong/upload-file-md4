@@ -1,0 +1,16 @@
+com/codegym/controller/LandscapeController.java
+ com.codegym.controller.LandscapeController
+com/codegym/config/AppConfiguration.java
+ com.codegym.config.AppConfiguration
+com/codegym/service/IService.java
+ com.codegym.service.IService
+com/codegym/service/impl/LandscapeServiceImpl.java
+ com.codegym.service.impl.LandscapeServiceImpl
+com/codegym/model/Landscape.java
+ com.codegym.model.Landscape
+com/codegym/model/LandscapeForm.java
+ com.codegym.model.LandscapeForm
+com/codegym/service/ILandscapeService.java
+ com.codegym.service.ILandscapeService
+com/codegym/config/AppInitializer.java
+ com.codegym.config.AppInitializer
