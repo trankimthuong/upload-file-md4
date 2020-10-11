@@ -22,7 +22,7 @@ public class LandscapeController {
     @Autowired
     private ILandscapeService landscapeService;
 
-    @GetMapping()
+    @GetMapping("")
     public ModelAndView index(){
         ModelAndView modelAndView = new ModelAndView("landscape/list");
         modelAndView.addObject("list", landscapeService.findAll());
@@ -37,9 +37,11 @@ public class LandscapeController {
     }
 
     @PostMapping("/edit/{id}")
-    public ModelAndView editLandscape(@ModelAttribute Landscape landscape){
+    public ModelAndView editLandscape(@ModelAttribute Landscape landscape, @PathVariable Long id){
         ModelAndView modelAndView = new ModelAndView("/landscape/edit");
         modelAndView.addObject("landscape", landscape);
+        Landscape oldLandscape = landscapeService.findById(id);
+        landscape.setImage(oldLandscape.getImage());
         landscapeService.update(landscape);
         modelAndView.addObject("mess", "done edit");
         return modelAndView;
@@ -66,5 +68,12 @@ public class LandscapeController {
         }
         landscapeService.save(landscape);
         return new ModelAndView("/landscape/create", "landscape", new LandscapeForm());
+    }
+
+
+    @GetMapping("/delete/{id}")
+    public ModelAndView deleteStudent(@PathVariable Long id){
+        landscapeService.remove(id);
+        return new ModelAndView("redirect:" + "/landscapes");
     }
 }

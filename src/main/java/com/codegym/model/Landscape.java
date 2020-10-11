@@ -1,7 +1,14 @@
 package com.codegym.model;
 
+import javax.persistence.*;
+
+@Entity
+@Table
 public class Landscape {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     private String name;
     private String country;
     private String image;
@@ -22,6 +29,12 @@ public class Landscape {
 
     public Landscape(Long id, String name, String country, String image) {
         this.id = id;
+        this.name = name;
+        this.country = country;
+        this.image = image;
+    }
+
+    public Landscape(String name, String country, String image) {
         this.name = name;
         this.country = country;
         this.image = image;

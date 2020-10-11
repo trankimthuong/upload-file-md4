@@ -8,6 +8,7 @@
 <span th:replace="layout:: header"></span>
 <h1>Edit</h1>
 <span th:text="${mess}"></span>
+<h1><a th:href="@{'/landscapes'}">Back to list landscapes</a></h1>
 <form th:object="${landscape}" method="post">
     <table>
         <tr hidden="hidden">

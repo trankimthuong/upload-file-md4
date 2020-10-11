@@ -2,48 +2,98 @@ package com.codegym.service.impl;
 
 import com.codegym.model.Landscape;
 import com.codegym.service.ILandscapeService;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class LandscapeServiceImpl implements ILandscapeService {
-    private static Map<Long, Landscape> listLandscapes;
-    static {
-        listLandscapes = new HashMap<>();
-        listLandscapes.put(1L, new Landscape(1L, "Phượng hoàng cổ trấn", "Tung Của", "1.png"));
-        listLandscapes.put(2L, new Landscape(2L,"Vịnh Hạ Long", "Việt Nam", "2.png"));
-        listLandscapes.put(3L, new Landscape(3L,"Verdon Gorge", "Pháp", "1.png"));
-        listLandscapes.put(4L, new Landscape(4L,"Hồ nước Thần Tiên", "Scotland", "4.png"));
-    }
+    @Autowired
+    private EntityManager entityManager;
+    @Autowired
+    private SessionFactory sessionFactory;
 
     @Override
-    public List<Landscape> findAll() {
-        ArrayList list = new ArrayList<>(listLandscapes.values());
-        return list;
+    public Iterable<Landscape> findAll() {
+        String queryStr = "SELECT c FROM Landscape AS c";
+        TypedQuery<Landscape> query = entityManager.createQuery(queryStr, Landscape.class);
+        return query.getResultList();
     }
 
     @Override
     public Landscape findById(Long id) {
-        return listLandscapes.get(id);
+        String queryStr = "SELECT c FROM Landscape AS c WHERE c.id = :id";
+        TypedQuery<Landscape> query = entityManager.createQuery(queryStr, Landscape.class);
+        query.setParameter("id", id);
+        return query.getSingleResult();
     }
 
     @Override
-    public void update(Landscape model) {
-        listLandscapes.put(model.getId(), model);
+    public Landscape update(Landscape model) {
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            session.update(model);
+            transaction.commit();
+            return model;
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Landscape save(Landscape model) {
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            session.save(model);
+            transaction.commit();
+            return model;
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        return null;
     }
 
     @Override
     public void remove(Long id) {
-
-    }
-
-    @Override
-    public void save(Landscape model) {
-        Long stt = listLandscapes.size() + 1L;
-        model.setId(stt);
-        listLandscapes.put(stt, model);
-
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            Landscape landscape = findById(id);
+            transaction = session.beginTransaction();
+            session.delete(landscape);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
     }
 }
