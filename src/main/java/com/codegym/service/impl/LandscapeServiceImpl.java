@@ -1,13 +1,18 @@
 package com.codegym.service.impl;
 
+import com.codegym.model.Country;
 import com.codegym.model.Landscape;
+import com.codegym.repository.LandscapeRepository;
 import com.codegym.service.ILandscapeService;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,84 +21,35 @@ import java.util.Map;
 
 public class LandscapeServiceImpl implements ILandscapeService {
     @Autowired
-    private EntityManager entityManager;
-    @Autowired
-    private SessionFactory sessionFactory;
+    private LandscapeRepository landscapeRepository;
 
     @Override
-    public Iterable<Landscape> findAll() {
-        String queryStr = "SELECT c FROM Landscape AS c";
-        TypedQuery<Landscape> query = entityManager.createQuery(queryStr, Landscape.class);
-        return query.getResultList();
+    public Page<Landscape> findAll(Pageable pageable) {
+        return landscapeRepository.findAll(pageable);
     }
 
     @Override
     public Landscape findById(Long id) {
-        String queryStr = "SELECT c FROM Landscape AS c WHERE c.id = :id";
-        TypedQuery<Landscape> query = entityManager.createQuery(queryStr, Landscape.class);
-        query.setParameter("id", id);
-        return query.getSingleResult();
+        return landscapeRepository.findOne(id);
     }
 
     @Override
-    public Landscape update(Landscape model) {
-        Session session = null;
-        Transaction transaction = null;
-        try {
-            session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
-            session.update(model);
-            transaction.commit();
-            return model;
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (transaction != null) {
-                transaction.rollback();
-            }
-        } finally {
-            if (session != null) {
-                session.close();
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public Landscape save(Landscape model) {
-        Session session = null;
-        Transaction transaction = null;
-        try {
-            session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
-            session.save(model);
-            transaction.commit();
-            return model;
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (transaction != null) {
-                transaction.rollback();
-            }
-        } finally {
-            if (session != null) {
-                session.close();
-            }
-        }
-        return null;
+    public void save(Landscape landscape) {
+        landscapeRepository.save(landscape);
     }
 
     @Override
     public void remove(Long id) {
-        Transaction transaction = null;
-        try (Session session = sessionFactory.openSession()) {
-            Landscape landscape = findById(id);
-            transaction = session.beginTransaction();
-            session.delete(landscape);
-            transaction.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (transaction != null) {
-                transaction.rollback();
-            }
-        }
+        landscapeRepository.delete(id);
+    }
+
+    @Override
+    public Iterable<Landscape> findAllByCountry(Country country) {
+        return landscapeRepository.findAllByCountry(country);
+    }
+
+    @Override
+    public Page<Landscape> findAllByNameContaining(String name, Pageable pageable) {
+        return landscapeRepository.findByNameContaining(name,pageable);
     }
 }

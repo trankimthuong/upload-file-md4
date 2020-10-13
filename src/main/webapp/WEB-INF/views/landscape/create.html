@@ -9,7 +9,9 @@
 <h1>Create new landscape</h1>
 
 <h1><a th:href="@{'/landscapes'}">Back to list landscapes</a></h1>
-
+<th:block th:if="${message}">
+    <p th:text="${message}"></p>
+</th:block>
 <form th:object="${landscape}" method="post" enctype="multipart/form-data">
     <table>
         <tr>
@@ -17,12 +19,19 @@
             <td><input th:field="*{name}"/></td>
         </tr>
         <tr>
-            <td>country</td>
-            <td><input th:field="*{country}"/></td>
+            <td>content</td>
+            <td><input th:field="*{content}"/></td>
         </tr>
+        <td>
+            <select th:field="*{country}">
+                <th:block th:each="country1:${listcountries}">
+                    <option th:value="${country1.id}" th:text="${country1.name}"></option>
+                </th:block>
+            </select>
+        </td>
         <tr>
             <td>image</td>
-            <td><input type="file" th:field="*{image}"/></td>
+            <td><input type="file" th:field="*{avatar}"/></td>
         </tr>
         <tr>
             <td></td>

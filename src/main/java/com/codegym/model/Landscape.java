@@ -1,43 +1,50 @@
 package com.codegym.model;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.persistence.*;
 
 @Entity
-@Table
+@Table(name = "landscapes")
 public class Landscape {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     private String name;
-    private String country;
+    private String content;
     private String image;
+
+    @Transient
+    private MultipartFile avatar;
+
+    @ManyToOne
+    @JoinColumn(name = "country_id")
+    private Country country;
 
     public Landscape() {
     }
 
-    public Landscape(String name, String country) {
-        this.name = name;
-        this.country = country;
-    }
-
-    public Landscape(Long id, String name, String country) {
+    public Landscape(Long id, String name, String content, String image, MultipartFile avatar, Country country) {
         this.id = id;
         this.name = name;
+        this.content = content;
+        this.image = image;
+        this.avatar = avatar;
         this.country = country;
     }
 
-    public Landscape(Long id, String name, String country, String image) {
-        this.id = id;
+    public Landscape(String name, String content, MultipartFile avatar, Country country) {
         this.name = name;
+        this.content = content;
+        this.avatar = avatar;
         this.country = country;
-        this.image = image;
     }
 
-    public Landscape(String name, String country, String image) {
+    public Landscape(String name, String content, String image, Country country) {
         this.name = name;
-        this.country = country;
+        this.content = content;
         this.image = image;
+        this.country = country;
     }
 
     public Long getId() {
@@ -56,12 +63,12 @@ public class Landscape {
         this.name = name;
     }
 
-    public String getCountry() {
-        return country;
+    public String getContent() {
+        return content;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getImage() {
@@ -70,5 +77,21 @@ public class Landscape {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public MultipartFile getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(MultipartFile avatar) {
+        this.avatar = avatar;
+    }
+
+    public Country getCountry() {
+        return country;
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
     }
 }
