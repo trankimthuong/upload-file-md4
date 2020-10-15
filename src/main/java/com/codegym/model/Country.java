@@ -9,6 +9,7 @@ public class Country {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true)
     private String name;
 
     @OneToMany(targetEntity = Landscape.class)

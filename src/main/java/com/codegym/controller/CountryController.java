@@ -3,6 +3,7 @@ package com.codegym.controller;
 import com.codegym.model.Country;
 import com.codegym.service.ICountryService;
 import com.codegym.service.ILandscapeService;
+import com.codegym.service.exception.DuplicateCountryException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -34,11 +35,16 @@ public class CountryController {
 
     @PostMapping("/create")
     public ModelAndView saveCountry(@ModelAttribute("country") Country country){
-        countryService.save(country);
-        ModelAndView modelAndView = new ModelAndView("/country/create");
-        modelAndView.addObject("country", new Country());
-        modelAndView.addObject("message", "New country created");
-        return modelAndView;
+        try{
+            countryService.save(country);
+            ModelAndView modelAndView = new ModelAndView("/country/create");
+            modelAndView.addObject("country", new Country());
+            modelAndView.addObject("message", "New country created");
+            return modelAndView;
+        }catch (DuplicateCountryException e){
+            return new ModelAndView("/error404");
+        }
+
     }
 
     @GetMapping("/edit/{id}")
@@ -56,11 +62,16 @@ public class CountryController {
 
     @PostMapping("/edit")
     public ModelAndView updateCountry(@ModelAttribute("country") Country country){
-        countryService.save(country);
-        ModelAndView modelAndView = new ModelAndView("/country/edit");
-        modelAndView.addObject("country", country);
-        modelAndView.addObject("message", "Country updated successfully");
-        return modelAndView;
+        try {
+            countryService.save(country);
+            ModelAndView modelAndView = new ModelAndView("/country/edit");
+            modelAndView.addObject("country", country);
+            modelAndView.addObject("message", "Country updated successfully");
+            return modelAndView;
+        }catch (DuplicateCountryException e){
+            return new ModelAndView("/error404");
+        }
+
     }
 
     @GetMapping("/delete/{id}")

@@ -3,7 +3,9 @@ package com.codegym.service.impl;
 import com.codegym.model.Country;
 import com.codegym.repository.CountryRepository;
 import com.codegym.service.ICountryService;
+import com.codegym.service.exception.DuplicateCountryException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 
 public class CountryServiceImpl implements ICountryService {
     @Autowired
@@ -20,8 +22,13 @@ public class CountryServiceImpl implements ICountryService {
     }
 
     @Override
-    public void save(Country country) {
-        countryRepository.save(country);
+    public void save(Country country) throws DuplicateCountryException{
+        try{
+            countryRepository.save(country);
+        }catch (DataIntegrityViolationException e){
+            throw new DuplicateCountryException();
+        }
+
     }
 
     @Override
