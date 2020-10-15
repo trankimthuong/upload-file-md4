@@ -1,5 +1,6 @@
 package com.codegym.config;
 
+import com.codegym.concern.Logger;
 import com.codegym.service.ICountryService;
 import com.codegym.service.ILandscapeService;
 import com.codegym.service.impl.CountryServiceImpl;
@@ -9,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
@@ -51,12 +49,18 @@ import java.util.Properties;
 @EnableTransactionManagement
 @EnableSpringDataWebSupport
 @EnableJpaRepositories("com.codegym.repository")
+@EnableAspectJAutoProxy
 public class AppConfiguration extends WebMvcConfigurerAdapter implements ApplicationContextAware {
     private ApplicationContext applicationContext;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
+    }
+
+    @Bean
+    public Logger logger(){
+        return new Logger();
     }
 
     @Bean
