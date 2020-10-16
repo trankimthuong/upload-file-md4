@@ -20,6 +20,7 @@
         <th>image</th>
         <th>Edit</th>
         <th>Delete</th>
+        <th>Add to list wanna visit</th>
     </tr>
     <th:block th:each="landscape, loop: ${landscapes}">
     <tr>
@@ -29,6 +30,7 @@
         <td><img th:src="@{'/i/'+ ${landscape.image}}" width="100"/></td>
         <td><a th:href="@{'/landscapes/edit/'+${landscape.id}}">Edit</a></td>
         <td><a th:href="@{'/landscapes/delete/'+${landscape.id}}">Delete</a></td>
+        <td><a th:href="@{'/landscapes/addtolistwannavisit/'+${landscape.id}}">Add to list wanna visit</a></td>
     </tr>
 
 </th:block>
@@ -39,5 +41,6 @@
     <a th:href="@{'/landscapes'(page=${landscapes.number + 1},s=${s})}" th:if="${landscapes.hasNext()}">Next</a>
 </div>
 <a href="/countries">Go to country</a>
+<a href="/listlandscapeswnvisit">Go to list landscape wanna visit</a>
 </body>
 </html>

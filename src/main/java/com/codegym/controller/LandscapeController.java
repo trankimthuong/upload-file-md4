@@ -2,6 +2,7 @@ package com.codegym.controller;
 
 import com.codegym.model.Country;
 import com.codegym.model.Landscape;
+import com.codegym.model.ListLandscapeWannaVisit;
 import com.codegym.service.ICountryService;
 import com.codegym.service.ILandscapeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/landscapes")
+@SessionAttributes("mylistfavourite")
 public class LandscapeController {
     @Autowired
     private Environment environment;
@@ -31,6 +33,11 @@ public class LandscapeController {
     @ModelAttribute("listcountries")
     public Iterable<Country> countries(){
         return countryService.findAll();
+    }
+
+    @ModelAttribute("mylistfavourite")
+    public ListLandscapeWannaVisit setUpMyListFavourite(){
+        return new ListLandscapeWannaVisit();
     }
 
     @GetMapping("")
@@ -110,5 +117,15 @@ public class LandscapeController {
     public String deleteCountry(@ModelAttribute("landscape") Landscape landscape){
         landscapeService.remove(landscape.getId());
         return "redirect:";
+    }
+
+    @GetMapping("/addtolistwannavisit/{id}")
+    public ModelAndView addToListWannaVisit(@PathVariable Long id, @ModelAttribute("mylistfavourite") ListLandscapeWannaVisit listLandscapeWannaVisit){
+        Landscape landscape = landscapeService.findById(id);
+        listLandscapeWannaVisit.addNewLandscape(landscape);
+        for(Landscape landscape1: listLandscapeWannaVisit.getLandscapesWnVisit()){
+            System.out.println(landscape1.getName());
+        }
+        return new ModelAndView("redirect:" +  "/landscapes");
     }
 }
