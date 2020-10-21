@@ -1,5 +1,7 @@
 package com.codegym.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.*;
 
@@ -12,7 +14,8 @@ public class Country {
     @Column(unique = true)
     private String name;
 
-    @OneToMany(targetEntity = Landscape.class)
+    @OneToMany(mappedBy = "country",fetch = FetchType.EAGER)
+    @JsonIgnoreProperties(value = {"country"})
     private List<Landscape> landscapes;
 
     public Country() {
@@ -44,5 +47,10 @@ public class Country {
 
     public void setLandscapes(List<Landscape> landscapes) {
         this.landscapes = landscapes;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

@@ -1,5 +1,6 @@
 package com.codegym.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
@@ -17,7 +18,8 @@ public class Landscape {
     @Transient
     private MultipartFile avatar;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnoreProperties(value = {"landscapes"})
     @JoinColumn(name = "country_id")
     private Country country;
 

@@ -1,6 +1,7 @@
 package com.codegym.config;
 
 import com.codegym.concern.Logger;
+import com.codegym.formatter.CountryFormatter;
 import com.codegym.service.ICountryService;
 import com.codegym.service.ILandscapeService;
 import com.codegym.service.impl.CountryServiceImpl;
@@ -133,10 +134,10 @@ public class AppConfiguration extends WebMvcConfigurerAdapter implements Applica
         configurer.enable();
     }
 
-//    @Override
-//    public void addFormatters(FormatterRegistry registry) {
-//        registry.addFormatter(new ProvinceFormatter(applicationContext.getBean(ProvinceService.class)));
-//    }
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addFormatter(new CountryFormatter(applicationContext.getBean(ICountryService.class)));
+    }
 
     @Bean
     @Qualifier(value = "entityManager")
